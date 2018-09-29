@@ -1,13 +1,19 @@
 type User {
   id: ID! @unique
   email: String @unique
-  name: String!
-  posts: [Post!]!
+  firstName: String!
+  middleName: String
+  lastName: String!
+  role: Role! @default(value: Physician)
 }
 
-type Post {
-  id: ID! @unique
-  title: String!
-  published: Boolean! @default(value: "false")
-  author: User
+enum Role { 
+  Admin
+  Owner
+  Physician
+  Patient
+  Provider
+  Disabled
 }
+
+
