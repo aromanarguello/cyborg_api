@@ -1,11 +1,5 @@
-type Query {
-#   
-}
-
 type Mutation {
   createUser(name: String!): User
-  createDraft(title: String!, userId: ID!): Post
-  publish(postId: ID!): Post
 }
 
 type User {
