@@ -1,5 +1,9 @@
 type Mutation {
-  createUser(name: String!): User
+  createUser(firstName: String!, lastName: String! email: String!): User
+}
+
+type Query {
+  fetchUsers: User
 }
 
 type User {
