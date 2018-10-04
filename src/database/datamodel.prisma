@@ -1,0 +1,20 @@
+type User {
+  id: ID! @unique
+  email: String @unique
+  firstName: String!
+  middleName: String
+  lastName: String!
+  password: String!
+  role: Role! @default(value: Physician)
+}
+
+enum Role { 
+  Admin
+  Owner
+  Physician
+  Patient
+  Provider
+  Disabled
+}
+
+
