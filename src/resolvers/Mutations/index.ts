@@ -1,5 +1,3 @@
 import { userMutations } from './users';
 
-export const Mutations = {
-    ...userMutations,
-}
+export const mutations = { ...userMutations };

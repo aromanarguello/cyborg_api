@@ -1,5 +1,3 @@
 import { userQueries } from './users';
 
-export const Queries = { 
-    ...userQueries,
-}
+export const queries = { ...userQueries };
