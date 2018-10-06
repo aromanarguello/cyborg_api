@@ -1,5 +1,5 @@
 export const userQueries = {
-    fetchUsers(_, {}, context) {
-        return context.prisma.users();
+    fetchUsers(_, {}, ctx, info) {
+        return ctx.db.users({}, info);
     }
-}
+};

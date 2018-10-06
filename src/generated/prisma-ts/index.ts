@@ -110,6 +110,8 @@ export type UserOrderByInput =
   | "middleName_DESC"
   | "lastName_ASC"
   | "lastName_DESC"
+  | "password_ASC"
+  | "password_DESC"
   | "role_ASC"
   | "role_DESC"
   | "createdAt_ASC"
@@ -132,6 +134,7 @@ export interface UserCreateInput {
   firstName: String;
   middleName?: String;
   lastName: String;
+  password: String;
   role?: Role;
 }
 
@@ -140,6 +143,7 @@ export interface UserUpdateInput {
   firstName?: String;
   middleName?: String;
   lastName?: String;
+  password?: String;
   role?: Role;
 }
 
@@ -214,6 +218,20 @@ export interface UserWhereInput {
   lastName_not_starts_with?: String;
   lastName_ends_with?: String;
   lastName_not_ends_with?: String;
+  password?: String;
+  password_not?: String;
+  password_in?: String[] | String;
+  password_not_in?: String[] | String;
+  password_lt?: String;
+  password_lte?: String;
+  password_gt?: String;
+  password_gte?: String;
+  password_contains?: String;
+  password_not_contains?: String;
+  password_starts_with?: String;
+  password_not_starts_with?: String;
+  password_ends_with?: String;
+  password_not_ends_with?: String;
   role?: Role;
   role_not?: Role;
   role_in?: Role[] | Role;
@@ -279,6 +297,7 @@ export interface UserPreviousValuesNode {
   firstName: String;
   middleName?: String;
   lastName: String;
+  password: String;
   role: Role;
 }
 
@@ -290,6 +309,7 @@ export interface UserPreviousValues
   firstName: () => Promise<String>;
   middleName: () => Promise<String>;
   lastName: () => Promise<String>;
+  password: () => Promise<String>;
   role: () => Promise<Role>;
 }
 
@@ -301,6 +321,7 @@ export interface UserPreviousValuesSubscription
   firstName: () => Promise<AsyncIterator<String>>;
   middleName: () => Promise<AsyncIterator<String>>;
   lastName: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
 }
 
@@ -333,6 +354,7 @@ export interface UserNode {
   firstName: String;
   middleName?: String;
   lastName: String;
+  password: String;
   role: Role;
 }
 
@@ -342,6 +364,7 @@ export interface User extends Promise<UserNode>, Fragmentable {
   firstName: () => Promise<String>;
   middleName: () => Promise<String>;
   lastName: () => Promise<String>;
+  password: () => Promise<String>;
   role: () => Promise<Role>;
 }
 
@@ -353,6 +376,7 @@ export interface UserSubscription
   firstName: () => Promise<AsyncIterator<String>>;
   middleName: () => Promise<AsyncIterator<String>>;
   lastName: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
 }
 
