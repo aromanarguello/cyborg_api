@@ -1,9 +1,9 @@
 type Mutation {
-  createUser(firstName: String!, lastName: String!, middleName: String!, email: String!, password: String!): User
+  signup(firstName: String!, lastName: String!, middleName: String!, email: String!, password: String!): AuthPayload!
 }
 
 type Query {
-  fetchUsers: [User!]
+  fetchUsers: [User!]!
 }
 
 type User {
@@ -11,4 +11,9 @@ type User {
   lastName: String!
   middleName: String!
   email: String!
+}
+
+type AuthPayload {
+  token: String
+  newUser: User
 }
