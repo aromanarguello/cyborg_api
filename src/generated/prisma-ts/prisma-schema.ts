@@ -6,6 +6,8 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 scalar Long
 
 type Mutation {
@@ -61,6 +63,9 @@ type User {
   middleName: String
   lastName: String!
   password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  lastLoggedIn: DateTime
   role: Role!
 }
 
@@ -76,6 +81,7 @@ input UserCreateInput {
   middleName: String
   lastName: String!
   password: String!
+  lastLoggedIn: DateTime
   role: Role
 }
 
@@ -97,12 +103,14 @@ enum UserOrderByInput {
   lastName_DESC
   password_ASC
   password_DESC
-  role_ASC
-  role_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  lastLoggedIn_ASC
+  lastLoggedIn_DESC
+  role_ASC
+  role_DESC
 }
 
 type UserPreviousValues {
@@ -112,6 +120,9 @@ type UserPreviousValues {
   middleName: String
   lastName: String!
   password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  lastLoggedIn: DateTime
   role: Role!
 }
 
@@ -139,6 +150,7 @@ input UserUpdateInput {
   middleName: String
   lastName: String
   password: String
+  lastLoggedIn: DateTime
   role: Role
 }
 
@@ -227,6 +239,30 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  lastLoggedIn: DateTime
+  lastLoggedIn_not: DateTime
+  lastLoggedIn_in: [DateTime!]
+  lastLoggedIn_not_in: [DateTime!]
+  lastLoggedIn_lt: DateTime
+  lastLoggedIn_lte: DateTime
+  lastLoggedIn_gt: DateTime
+  lastLoggedIn_gte: DateTime
   role: Role
   role_not: Role
   role_in: [Role!]

@@ -112,12 +112,14 @@ export type UserOrderByInput =
   | "lastName_DESC"
   | "password_ASC"
   | "password_DESC"
-  | "role_ASC"
-  | "role_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "lastLoggedIn_ASC"
+  | "lastLoggedIn_DESC"
+  | "role_ASC"
+  | "role_DESC";
 
 export type Role =
   | "Admin"
@@ -135,15 +137,7 @@ export interface UserCreateInput {
   middleName?: String;
   lastName: String;
   password: String;
-  role?: Role;
-}
-
-export interface UserUpdateInput {
-  email?: String;
-  firstName?: String;
-  middleName?: String;
-  lastName?: String;
-  password?: String;
+  lastLoggedIn?: DateTimeInput;
   role?: Role;
 }
 
@@ -232,6 +226,30 @@ export interface UserWhereInput {
   password_not_starts_with?: String;
   password_ends_with?: String;
   password_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  lastLoggedIn?: DateTimeInput;
+  lastLoggedIn_not?: DateTimeInput;
+  lastLoggedIn_in?: DateTimeInput[] | DateTimeInput;
+  lastLoggedIn_not_in?: DateTimeInput[] | DateTimeInput;
+  lastLoggedIn_lt?: DateTimeInput;
+  lastLoggedIn_lte?: DateTimeInput;
+  lastLoggedIn_gt?: DateTimeInput;
+  lastLoggedIn_gte?: DateTimeInput;
   role?: Role;
   role_not?: Role;
   role_in?: Role[] | Role;
@@ -239,6 +257,16 @@ export interface UserWhereInput {
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
+}
+
+export interface UserUpdateInput {
+  email?: String;
+  firstName?: String;
+  middleName?: String;
+  lastName?: String;
+  password?: String;
+  lastLoggedIn?: DateTimeInput;
+  role?: Role;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -261,20 +289,47 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface UserEdgeNode {
-  cursor: String;
+export interface UserPreviousValuesNode {
+  id: ID_Output;
+  email?: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
+  password: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  lastLoggedIn?: DateTimeOutput;
+  role: Role;
 }
 
-export interface UserEdge extends Promise<UserEdgeNode>, Fragmentable {
-  node: <T = User>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdgeNode>>,
+export interface UserPreviousValues
+  extends Promise<UserPreviousValuesNode>,
     Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  password: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  lastLoggedIn: () => Promise<DateTimeOutput>;
+  role: () => Promise<Role>;
+}
+
+export interface UserPreviousValuesSubscription
+  extends Promise<AsyncIterator<UserPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  middleName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  lastLoggedIn: () => Promise<AsyncIterator<DateTimeOutput>>;
+  role: () => Promise<AsyncIterator<Role>>;
 }
 
 export interface BatchPayloadNode {
@@ -291,30 +346,34 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface UserPreviousValuesNode {
+export interface UserNode {
   id: ID_Output;
   email?: String;
   firstName: String;
   middleName?: String;
   lastName: String;
   password: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  lastLoggedIn?: DateTimeOutput;
   role: Role;
 }
 
-export interface UserPreviousValues
-  extends Promise<UserPreviousValuesNode>,
-    Fragmentable {
+export interface User extends Promise<UserNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   firstName: () => Promise<String>;
   middleName: () => Promise<String>;
   lastName: () => Promise<String>;
   password: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  lastLoggedIn: () => Promise<DateTimeOutput>;
   role: () => Promise<Role>;
 }
 
-export interface UserPreviousValuesSubscription
-  extends Promise<AsyncIterator<UserPreviousValuesNode>>,
+export interface UserSubscription
+  extends Promise<AsyncIterator<UserNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
@@ -322,6 +381,9 @@ export interface UserPreviousValuesSubscription
   middleName: () => Promise<AsyncIterator<String>>;
   lastName: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  lastLoggedIn: () => Promise<AsyncIterator<DateTimeOutput>>;
   role: () => Promise<AsyncIterator<Role>>;
 }
 
@@ -348,38 +410,6 @@ export interface UserSubscriptionPayloadSubscription
   previousValues: <T = UserPreviousValuesSubscription>() => T;
 }
 
-export interface UserNode {
-  id: ID_Output;
-  email?: String;
-  firstName: String;
-  middleName?: String;
-  lastName: String;
-  password: String;
-  role: Role;
-}
-
-export interface User extends Promise<UserNode>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  firstName: () => Promise<String>;
-  middleName: () => Promise<String>;
-  lastName: () => Promise<String>;
-  password: () => Promise<String>;
-  role: () => Promise<Role>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<UserNode>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  email: () => Promise<AsyncIterator<String>>;
-  firstName: () => Promise<AsyncIterator<String>>;
-  middleName: () => Promise<AsyncIterator<String>>;
-  lastName: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  role: () => Promise<AsyncIterator<Role>>;
-}
-
 export interface UserConnectionNode {}
 
 export interface UserConnection
@@ -396,6 +426,38 @@ export interface UserConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T;
   edges: <T = Promise<AsyncIterator<Array<UserEdgeSubscription>>>>() => T;
   aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface AggregateUserNode {
+  count: Int;
+}
+
+export interface AggregateUser
+  extends Promise<AggregateUserNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUserNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserEdgeNode {
+  cursor: String;
+}
+
+export interface UserEdge extends Promise<UserEdgeNode>, Fragmentable {
+  node: <T = User>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdgeNode>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface PageInfoNode {
@@ -421,21 +483,15 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateUserNode {
-  count: Int;
-}
+/*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
 
-export interface AggregateUser
-  extends Promise<AggregateUserNode>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUserNode>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -443,11 +499,14 @@ The `Boolean` scalar type represents `true` or `false`.
 export type Boolean = boolean;
 
 /*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
+
+/*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
-
-export type Long = string;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -455,10 +514,7 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 export type ID_Input = string | number;
 export type ID_Output = string;
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
+export type Long = string;
 
 /**
  * Type Defs
