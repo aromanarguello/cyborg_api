@@ -5,6 +5,9 @@ type User {
   middleName: String
   lastName: String!
   password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  lastLoggedIn: DateTime
   role: Role! @default(value: Physician)
 }
 

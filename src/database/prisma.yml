@@ -6,3 +6,9 @@ generate:
     output: ../generated/prisma-ts
   - generator: graphql-schema
     output: ../generated
+
+hooks:
+  post-deploy:
+    - graphql get-schema --project database
+    - prisma generate
+    - echo "Deployment finished"
