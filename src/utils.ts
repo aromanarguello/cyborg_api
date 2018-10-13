@@ -4,7 +4,7 @@ export function getUserId(ctx) {
     const authorization = ctx.request.get('Authorization');
     if (authorization){
         const token = authorization.replace('Bearer', '');
-        const verifiedToken: any = verify(token, process.env.APP_SECRET);
+        const verifiedToken: any = verify(token, process.env.CREDENTIALS_SECRET);
         return verifiedToken && verifiedToken.userId;
     }
 
