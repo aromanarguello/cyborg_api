@@ -9,6 +9,7 @@ type User {
   updatedAt: DateTime!
   lastLoggedIn: DateTime
   role: Role! @default(value: Physician)
+  orders: [Order!]!
 }
 
 enum Role { 
@@ -20,4 +21,13 @@ enum Role {
   Disabled
 }
 
+type Order {
+  id: ID! @unique
+  item: String!
+  price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  provider: String!
+  owner: User!
+}
 

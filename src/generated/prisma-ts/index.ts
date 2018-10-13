@@ -11,6 +11,7 @@ type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
 
 export interface Exists {
+  order: (where?: OrderWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -32,6 +33,29 @@ export interface Prisma {
    * Queries
    */
 
+  order: (where: OrderWhereUniqueInput) => Order;
+  orders: (
+    args?: {
+      where?: OrderWhereInput;
+      orderBy?: OrderOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => Promise<Array<OrderNode>>;
+  ordersConnection: (
+    args?: {
+      where?: OrderWhereInput;
+      orderBy?: OrderOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => OrderConnection;
   user: (where: UserWhereUniqueInput) => User;
   users: (
     args?: {
@@ -61,6 +85,22 @@ export interface Prisma {
    * Mutations
    */
 
+  createOrder: (data: OrderCreateInput) => Order;
+  updateOrder: (
+    args: { data: OrderUpdateInput; where: OrderWhereUniqueInput }
+  ) => Order;
+  updateManyOrders: (
+    args: { data: OrderUpdateInput; where?: OrderWhereInput }
+  ) => BatchPayload;
+  upsertOrder: (
+    args: {
+      where: OrderWhereUniqueInput;
+      create: OrderCreateInput;
+      update: OrderUpdateInput;
+    }
+  ) => Order;
+  deleteOrder: (where: OrderWhereUniqueInput) => Order;
+  deleteManyOrders: (where?: OrderWhereInput) => BatchPayload;
   createUser: (data: UserCreateInput) => User;
   updateUser: (
     args: { data: UserUpdateInput; where: UserWhereUniqueInput }
@@ -86,6 +126,9 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  order: (
+    where?: OrderSubscriptionWhereInput
+  ) => OrderSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -98,6 +141,28 @@ export interface ClientConstructor<T> {
 /**
  * Types
  */
+
+export type Role =
+  | "Admin"
+  | "Owner"
+  | "Physician"
+  | "Patient"
+  | "Provider"
+  | "Disabled";
+
+export type OrderOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "item_ASC"
+  | "item_DESC"
+  | "price_ASC"
+  | "price_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC"
+  | "provider_ASC"
+  | "provider_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -121,24 +186,47 @@ export type UserOrderByInput =
   | "role_ASC"
   | "role_DESC";
 
-export type Role =
-  | "Admin"
-  | "Owner"
-  | "Physician"
-  | "Patient"
-  | "Provider"
-  | "Disabled";
-
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface UserCreateInput {
+export interface OrderCreateInput {
+  item: String;
+  price: Float;
+  provider: String;
+  owner: UserCreateOneWithoutOrdersInput;
+}
+
+export type OrderWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
   email?: String;
-  firstName: String;
-  middleName?: String;
-  lastName: String;
-  password: String;
-  lastLoggedIn?: DateTimeInput;
-  role?: Role;
+}>;
+
+export interface UserUpdateOneRequiredWithoutOrdersInput {
+  create?: UserCreateWithoutOrdersInput;
+  update?: UserUpdateWithoutOrdersDataInput;
+  upsert?: UserUpsertWithoutOrdersInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface OrderCreateWithoutOwnerInput {
+  item: String;
+  price: Float;
+  provider: String;
+}
+
+export interface OrderUpdateInput {
+  item?: String;
+  price?: Float;
+  provider?: String;
+  owner?: UserUpdateOneRequiredWithoutOrdersInput;
+}
+
+export interface OrderCreateManyWithoutOwnerInput {
+  create?: OrderCreateWithoutOwnerInput[] | OrderCreateWithoutOwnerInput;
+  connect?: OrderWhereUniqueInput[] | OrderWhereUniqueInput;
 }
 
 export interface UserWhereInput {
@@ -254,9 +342,83 @@ export interface UserWhereInput {
   role_not?: Role;
   role_in?: Role[] | Role;
   role_not_in?: Role[] | Role;
+  orders_every?: OrderWhereInput;
+  orders_some?: OrderWhereInput;
+  orders_none?: OrderWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
+}
+
+export interface UserCreateInput {
+  email?: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
+  password: String;
+  lastLoggedIn?: DateTimeInput;
+  role?: Role;
+  orders?: OrderCreateManyWithoutOwnerInput;
+}
+
+export interface OrderSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: OrderWhereInput;
+  AND?: OrderSubscriptionWhereInput[] | OrderSubscriptionWhereInput;
+  OR?: OrderSubscriptionWhereInput[] | OrderSubscriptionWhereInput;
+  NOT?: OrderSubscriptionWhereInput[] | OrderSubscriptionWhereInput;
+}
+
+export interface UserUpsertWithoutOrdersInput {
+  update: UserUpdateWithoutOrdersDataInput;
+  create: UserCreateWithoutOrdersInput;
+}
+
+export interface OrderUpdateWithoutOwnerDataInput {
+  item?: String;
+  price?: Float;
+  provider?: String;
+}
+
+export interface OrderUpdateManyWithoutOwnerInput {
+  create?: OrderCreateWithoutOwnerInput[] | OrderCreateWithoutOwnerInput;
+  delete?: OrderWhereUniqueInput[] | OrderWhereUniqueInput;
+  connect?: OrderWhereUniqueInput[] | OrderWhereUniqueInput;
+  disconnect?: OrderWhereUniqueInput[] | OrderWhereUniqueInput;
+  update?:
+    | OrderUpdateWithWhereUniqueWithoutOwnerInput[]
+    | OrderUpdateWithWhereUniqueWithoutOwnerInput;
+  upsert?:
+    | OrderUpsertWithWhereUniqueWithoutOwnerInput[]
+    | OrderUpsertWithWhereUniqueWithoutOwnerInput;
+}
+
+export interface UserCreateWithoutOrdersInput {
+  email?: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
+  password: String;
+  lastLoggedIn?: DateTimeInput;
+  role?: Role;
+}
+
+export interface UserCreateOneWithoutOrdersInput {
+  create?: UserCreateWithoutOrdersInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutOrdersDataInput {
+  email?: String;
+  firstName?: String;
+  middleName?: String;
+  lastName?: String;
+  password?: String;
+  lastLoggedIn?: DateTimeInput;
+  role?: Role;
 }
 
 export interface UserUpdateInput {
@@ -267,6 +429,18 @@ export interface UserUpdateInput {
   password?: String;
   lastLoggedIn?: DateTimeInput;
   role?: Role;
+  orders?: OrderUpdateManyWithoutOwnerInput;
+}
+
+export interface OrderUpdateWithWhereUniqueWithoutOwnerInput {
+  where: OrderWhereUniqueInput;
+  data: OrderUpdateWithoutOwnerDataInput;
+}
+
+export interface OrderUpsertWithWhereUniqueWithoutOwnerInput {
+  where: OrderWhereUniqueInput;
+  update: OrderUpdateWithoutOwnerDataInput;
+  create: OrderCreateWithoutOwnerInput;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -280,10 +454,78 @@ export interface UserSubscriptionWhereInput {
   NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  email?: String;
-}>;
+export interface OrderWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  item?: String;
+  item_not?: String;
+  item_in?: String[] | String;
+  item_not_in?: String[] | String;
+  item_lt?: String;
+  item_lte?: String;
+  item_gt?: String;
+  item_gte?: String;
+  item_contains?: String;
+  item_not_contains?: String;
+  item_starts_with?: String;
+  item_not_starts_with?: String;
+  item_ends_with?: String;
+  item_not_ends_with?: String;
+  price?: Float;
+  price_not?: Float;
+  price_in?: Float[] | Float;
+  price_not_in?: Float[] | Float;
+  price_lt?: Float;
+  price_lte?: Float;
+  price_gt?: Float;
+  price_gte?: Float;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  provider?: String;
+  provider_not?: String;
+  provider_in?: String[] | String;
+  provider_not_in?: String[] | String;
+  provider_lt?: String;
+  provider_lte?: String;
+  provider_gt?: String;
+  provider_gte?: String;
+  provider_contains?: String;
+  provider_not_contains?: String;
+  provider_starts_with?: String;
+  provider_not_starts_with?: String;
+  provider_ends_with?: String;
+  provider_not_ends_with?: String;
+  owner?: UserWhereInput;
+  AND?: OrderWhereInput[] | OrderWhereInput;
+  OR?: OrderWhereInput[] | OrderWhereInput;
+  NOT?: OrderWhereInput[] | OrderWhereInput;
+}
 
 export interface NodeNode {
   id: ID_Output;
@@ -332,18 +574,82 @@ export interface UserPreviousValuesSubscription
   role: () => Promise<AsyncIterator<Role>>;
 }
 
-export interface BatchPayloadNode {
-  count: Long;
+export interface OrderPreviousValuesNode {
+  id: ID_Output;
+  item: String;
+  price: Float;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  provider: String;
 }
 
-export interface BatchPayload extends Promise<BatchPayloadNode>, Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayloadNode>>,
+export interface OrderPreviousValues
+  extends Promise<OrderPreviousValuesNode>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
+  id: () => Promise<ID_Output>;
+  item: () => Promise<String>;
+  price: () => Promise<Float>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  provider: () => Promise<String>;
+}
+
+export interface OrderPreviousValuesSubscription
+  extends Promise<AsyncIterator<OrderPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  item: () => Promise<AsyncIterator<String>>;
+  price: () => Promise<AsyncIterator<Float>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  provider: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OrderNode {
+  id: ID_Output;
+  item: String;
+  price: Float;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  provider: String;
+}
+
+export interface Order extends Promise<OrderNode>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  item: () => Promise<String>;
+  price: () => Promise<Float>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  provider: () => Promise<String>;
+  owner: <T = User>() => T;
+}
+
+export interface OrderSubscription
+  extends Promise<AsyncIterator<OrderNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  item: () => Promise<AsyncIterator<String>>;
+  price: () => Promise<AsyncIterator<Float>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  provider: () => Promise<AsyncIterator<String>>;
+  owner: <T = UserSubscription>() => T;
+}
+
+export interface AggregateOrderNode {
+  count: Int;
+}
+
+export interface AggregateOrder
+  extends Promise<AggregateOrderNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOrderSubscription
+  extends Promise<AsyncIterator<AggregateOrderNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface UserNode {
@@ -370,6 +676,17 @@ export interface User extends Promise<UserNode>, Fragmentable {
   updatedAt: () => Promise<DateTimeOutput>;
   lastLoggedIn: () => Promise<DateTimeOutput>;
   role: () => Promise<Role>;
+  orders: <T = Promise<Array<OrderNode>>>(
+    args?: {
+      where?: OrderWhereInput;
+      orderBy?: OrderOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface UserSubscription
@@ -385,79 +702,49 @@ export interface UserSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastLoggedIn: () => Promise<AsyncIterator<DateTimeOutput>>;
   role: () => Promise<AsyncIterator<Role>>;
+  orders: <T = Promise<AsyncIterator<Array<OrderSubscription>>>>(
+    args?: {
+      where?: OrderWhereInput;
+      orderBy?: OrderOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
-export interface UserSubscriptionPayloadNode {
-  mutation: MutationType;
-  updatedFields?: String[];
+export interface BatchPayloadNode {
+  count: Long;
 }
 
-export interface UserSubscriptionPayload
-  extends Promise<UserSubscriptionPayloadNode>,
+export interface BatchPayload extends Promise<BatchPayloadNode>, Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayloadNode>>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = User>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValues>() => T;
+  count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayloadNode>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
+export interface OrderConnectionNode {}
 
-export interface UserConnectionNode {}
-
-export interface UserConnection
-  extends Promise<UserConnectionNode>,
+export interface OrderConnection
+  extends Promise<OrderConnectionNode>,
     Fragmentable {
   pageInfo: <T = PageInfo>() => T;
-  edges: <T = Promise<Array<UserEdgeNode>>>() => T;
-  aggregate: <T = AggregateUser>() => T;
+  edges: <T = Promise<Array<OrderEdgeNode>>>() => T;
+  aggregate: <T = AggregateOrder>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnectionNode>>,
+export interface OrderConnectionSubscription
+  extends Promise<AsyncIterator<OrderConnectionNode>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<Array<UserEdgeSubscription>>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
-}
-
-export interface AggregateUserNode {
-  count: Int;
-}
-
-export interface AggregateUser
-  extends Promise<AggregateUserNode>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUserNode>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserEdgeNode {
-  cursor: String;
-}
-
-export interface UserEdge extends Promise<UserEdgeNode>, Fragmentable {
-  node: <T = User>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdgeNode>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  edges: <T = Promise<AsyncIterator<Array<OrderEdgeSubscription>>>>() => T;
+  aggregate: <T = AggregateOrderSubscription>() => T;
 }
 
 export interface PageInfoNode {
@@ -483,6 +770,123 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
+export interface OrderSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface OrderSubscriptionPayload
+  extends Promise<OrderSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = Order>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OrderPreviousValues>() => T;
+}
+
+export interface OrderSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OrderSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OrderSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OrderPreviousValuesSubscription>() => T;
+}
+
+export interface OrderEdgeNode {
+  cursor: String;
+}
+
+export interface OrderEdge extends Promise<OrderEdgeNode>, Fragmentable {
+  node: <T = Order>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OrderEdgeSubscription
+  extends Promise<AsyncIterator<OrderEdgeNode>>,
+    Fragmentable {
+  node: <T = OrderSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface UserSubscriptionPayload
+  extends Promise<UserSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = User>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValues>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateUserNode {
+  count: Int;
+}
+
+export interface AggregateUser
+  extends Promise<AggregateUserNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUserNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserConnectionNode {}
+
+export interface UserConnection
+  extends Promise<UserConnectionNode>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T;
+  edges: <T = Promise<Array<UserEdgeNode>>>() => T;
+  aggregate: <T = AggregateUser>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnectionNode>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<Array<UserEdgeSubscription>>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface UserEdgeNode {
+  cursor: String;
+}
+
+export interface UserEdge extends Promise<UserEdgeNode>, Fragmentable {
+  node: <T = User>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdgeNode>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
+
 /*
 DateTime scalar input type, allowing Date
 */
@@ -493,15 +897,12 @@ DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
 
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
+export type Long = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
 */
-export type Int = number;
+export type Float = number;
 
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -514,7 +915,10 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 export type ID_Input = string | number;
 export type ID_Output = string;
 
-export type Long = string;
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
 
 /**
  * Type Defs

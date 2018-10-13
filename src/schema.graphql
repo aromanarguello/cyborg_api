@@ -1,15 +1,23 @@
-# import User, Role from './generated/prisma.graphql';
+# import User, Role, Order from './generated/prisma.graphql';
 
 type Mutation {
   signup(firstName: String!, lastName: String!, middleName: String!, role: Role, email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  newOrder(item: String!, price: Float, provider: String!, owner: OrderOwner!): Order
 }
 
 type Query {
   fetchUsers: [User!]!
+  fetchOrders: [Order!]
 }
 
 type AuthPayload {
   token: String
   user: User!
+}
+
+input OrderOwner {
+  firstName: String!
+  lastName: String!
+  email: String!
 }
