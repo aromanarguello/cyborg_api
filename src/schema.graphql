@@ -3,6 +3,7 @@
 type Mutation {
   signup(firstName: String!, lastName: String!, middleName: String!, role: Role, email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  changePassword(email: String!, id: ID, newPassword: String!): User
   newOrder(item: String!, price: Float, provider: String!, owner: OrderOwner!): Order
 }
 
