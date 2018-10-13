@@ -3,7 +3,7 @@ import { sign } from 'jsonwebtoken';
 
 import { IContext } from '../Types/context';
 
-export const signup = {
+export const auth = {
     async signup(_, args, ctx: IContext) {
         const hashedPassword = await hash(args.password, 10);
         const user = await ctx.db.createUser(

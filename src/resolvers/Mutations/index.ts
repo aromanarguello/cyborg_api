@@ -1,3 +1,7 @@
-import { signup } from './users';
+import { auth } from './auth';
+import { orderMutations } from './orders';
 
-export const mutations = { ...signup };
+export const mutations = {
+    ...auth,
+    ...orderMutations
+};
