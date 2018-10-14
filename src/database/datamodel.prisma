@@ -9,7 +9,7 @@ type User {
   updatedAt: DateTime!
   lastLoggedIn: DateTime
   role: Role! @default(value: Physician)
-  orders: [Order!]!
+  orders: [Order!]! @relation(name: "OrdersByUser")
 }
 
 enum Role { 
@@ -28,6 +28,5 @@ type Order {
   createdAt: DateTime!
   updatedAt: DateTime!
   provider: String!
-  owner: User!
+  owner: User! @relation(name: "OrdersByUser")
 }
-
