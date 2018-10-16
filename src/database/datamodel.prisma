@@ -5,11 +5,8 @@ type User {
   middleName: String
   lastName: String!
   password: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  lastLoggedIn: DateTime
   role: Role! @default(value: Physician)
-  orders: [Order!]! @relation(name: "OrdersByUser")
+  orders: [Order!]!
 }
 
 enum Role { 
@@ -25,8 +22,6 @@ type Order {
   id: ID! @unique
   item: String!
   price: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
   provider: String!
-  owner: User! @relation(name: "OrdersByUser")
+  owner: User!
 }
