@@ -1,5 +1,7 @@
 # import User, Role, Order from './generated/prisma.graphql';
 
+scalar JSON
+
 type Mutation {
   signup(firstName: String!, lastName: String!, middleName: String!, role: Role, email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
@@ -11,6 +13,7 @@ type Query {
   fetchUsers: [User!]!
   fetchOrders: [Order!]
   fetchOrderById(id: ID!): Order!
+  fetchOrderByUser(email: String!): JSON!
 }
 
 type AuthPayload {
