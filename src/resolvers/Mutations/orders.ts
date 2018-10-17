@@ -3,7 +3,7 @@ import { IContext } from '../Types/context';
 
 export const orderMutations = {
     async newOrder(_, args, ctx: IContext) {
-        const { item, price, provider, owner: { email } } = args;
+        const { input: { item, price, provider, owner: { email } } } = args;
         const userId = getUserId(ctx);
         const user = await ctx.db.user({ id: userId });
 
@@ -17,5 +17,18 @@ export const orderMutations = {
                 connect: { email }
             }
         });
+    },
+    async updateOrder(_, { input: { item, price, provider, id } }, ctx: IContext) {
+        getUserId(ctx);
+        return ctx.db.updateOrder({
+            where: {
+                id
+            },
+            data: {
+                item,
+                price,
+                provider
+            }
+        })
     }
 };
