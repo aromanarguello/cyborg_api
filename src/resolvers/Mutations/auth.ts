@@ -6,14 +6,15 @@ import { IContext } from '../Types/context';
 
 export const auth = {
     async signup(_, args, ctx: IContext) {
-        const hashedPassword = await hash(args.password, 10);
+        const { input: { firstName, lastName, middleName, email, role, password } } = args;
+        const hashedPassword = await hash(password, 10);
         const user = await ctx.db.createUser(
             {
-                firstName: args.firstName,
-                lastName: args.lastName,
-                middleName: args.middleName,
-                email: args.email,
-                role: args.role,
+                firstName,
+                lastName,
+                middleName,
+                email,
+                role,
                 password: hashedPassword
             }
         );
@@ -33,7 +34,7 @@ export const auth = {
             user
         };
     },
-    async changePassword(_, args, ctx: IContext) {
+    async changePassword(_, { email, newPassword }, ctx: IContext) {
         let user;
         let emailValid;
         let id;
@@ -45,9 +46,9 @@ export const auth = {
         }
 
         user = await ctx.db.user({ id });
-        emailValid = args.email === user.email ? true : false;
+        emailValid = email === user.email ? true : false;
 
-        const password = await hash(args.newPassword, 10);
+        const password = await hash(newPassword, 10);
         if (emailValid)
             await ctx.db.updateUser({
                 where: { id: user.id },
