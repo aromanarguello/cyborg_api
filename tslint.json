@@ -1,6 +1,12 @@
 {
     "defaultSeverity": "error",
     "extends": ["tslint:latest", "tslint-config-prettier"],
+    "linterOptions": {
+      "exclude": [
+        "node_modules",
+        "src/generated"
+      ]
+    },
     "jsRules": {},
     "rules": {
       "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
