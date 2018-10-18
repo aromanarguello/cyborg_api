@@ -39,7 +39,7 @@ input SignUpInput {
 
 input OrderInput {
   id: ID
-  item: [ItemInput!]!
+  itemId: [String!]
   provider: String
   price: Float
   owner: OrderOwner

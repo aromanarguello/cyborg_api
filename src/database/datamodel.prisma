@@ -20,7 +20,7 @@ enum Role {
 
 type Order {
   id: ID! @unique
-  item: [Item!]!
+  itemId: [String!]!
   price: Float!
   provider: String!
   owner: User!
