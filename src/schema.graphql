@@ -8,6 +8,7 @@ type Mutation {
   changePassword(email: String!, id: ID, newPassword: String!): User
   newOrder(input: OrderInput!): Order
   updateOrder(input: OrderInput!): Order
+  createItem(input: ItemInput!): Item
 }
 
 type Query {
@@ -15,6 +16,7 @@ type Query {
   fetchOrders: [Order!]
   fetchOrderById(id: ID!): Order!
   fetchOrderByUser(email: String!): JSON!
+  fetchItems: [Item!]!
 }
 
 type AuthPayload {
@@ -37,8 +39,15 @@ input SignUpInput {
 
 input OrderInput {
   id: ID
-  item: String
+  item: [ItemInput!]!
   provider: String
   price: Float
   owner: OrderOwner
+}
+
+input ItemInput {
+  name: String!
+  price: Int!
+  acronym: String
+  description: String
 }
