@@ -18,6 +18,7 @@ export const auth = {
                 password: hashedPassword
             }
         );
+
         return {
             token: sign({ userId: user.id }, process.env.CREDENTIALS_SECRET),
             user

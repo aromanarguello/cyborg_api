@@ -9,6 +9,7 @@ type Mutation {
   newOrder(input: OrderInput!): Order
   updateOrder(input: OrderInput!): Order
   createItem(input: ItemInput!): Item
+  updateItem(input: ItemInput!, id: ID!): Item
 }
 
 type Query {
@@ -47,7 +48,7 @@ input OrderInput {
 
 input ItemInput {
   name: String!
-  price: Int!
+  price: Float!
   acronym: String
   description: String
 }
