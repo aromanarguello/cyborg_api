@@ -9,6 +9,8 @@ export const orderMutations = {
 
         if (user.email !== email) throw new Error('User does not exist');
 
+        if (user.role !== 'Physician' || 'Admin') throw new Error('Not authorized!');
+
         return ctx.db.createOrder({
             itemId: {
                 set: itemId
@@ -21,7 +23,10 @@ export const orderMutations = {
         });
     },
     async updateOrder(_, { input: { itemId, price, provider, id } }, ctx: IContext) {
-        getUserId(ctx);
+        const userId = getUserId(ctx);
+        const user = await ctx.db.user({ id: userId });
+
+        if (user.role !== 'Physician' || 'Admin') throw new Error('Not authorized!');
         return ctx.db.updateOrder({
             where: {
                 id
