@@ -1,5 +1,5 @@
 #endpoint: ${env:PRISMA_ENDPOINT}
-endpoint: http://localhost:4466
+endpoint: https://eu1.prisma.sh/aroman/cyborg_api/dev
 datamodel: datamodel.prisma
 
 generate:
