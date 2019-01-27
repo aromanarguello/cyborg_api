@@ -44,7 +44,7 @@ export const auth = {
     if (!user) throw new Error(`Email: ${email}, does not exist`);
     const valid = await compare(password, user.password);
     if (!valid) throw new Error("Invalid Password");
-
+    console.log(`Success! user: ${email} is now logged in!`);
     return {
       token: sign({ userId: user.id }, process.env.CREDENTIALS_SECRET),
       user

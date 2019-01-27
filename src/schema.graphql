@@ -15,10 +15,18 @@ type Mutation {
 
 type Query {
   fetchUsers: [User!]!
+  fetchUser(email: String!): AppUser
   fetchOrders: [Order!]
   fetchOrderById(id: ID!): Order!
   fetchOrderByUser(email: String!): JSON!
   fetchItems: [Item!]!
+}
+
+type AppUser {
+  firstName: String
+  lastName: String
+  middleName: String
+  email: String
 }
 
 type AuthPayload {
