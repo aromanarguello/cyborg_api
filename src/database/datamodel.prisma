@@ -1,35 +1,36 @@
 type User {
-  id: ID! @unique
-  email: String @unique
-  firstName: String!
-  middleName: String
-  lastName: String!
-  password: String!
-  role: Role! @default(value: Physician)
-  orders: [Order!]!
+    id: ID! @unique
+    email: String @unique
+    firstName: String!
+    middleName: String
+    lastName: String!
+    password: String!
+    specialty: String!
+    role: Role! @default(value: Physician)
+    orders: [Order!]!
 }
 
-enum Role { 
-  Admin
-  Owner
-  Physician
-  Patient
-  Provider
-  Disabled
+enum Role {
+    Admin
+    Owner
+    Physician
+    Patient
+    Provider
+    Disabled
 }
 
 type Order {
-  id: ID! @unique
-  itemId: [String!]!
-  price: Float!
-  provider: String!
-  owner: User!
+    id: ID! @unique
+    itemId: [String!]!
+    price: Float!
+    provider: String!
+    owner: User!
 }
 
 type Item {
-  id: ID! @unique
-  name: String!
-  description: String!
-  acronym: String!
-  price: Float!
+    id: ID! @unique
+    name: String!
+    description: String!
+    acronym: String!
+    price: Float!
 }
